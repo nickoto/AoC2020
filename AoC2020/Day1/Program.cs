@@ -9,11 +9,15 @@ namespace Day1
         static void Main(string[] args)
         {
             // PART I - 2 Entries that sum to 2020.
-            var data = File.ReadAllLines("input.txt")
+            var datas = File.ReadAllLines("input.txt")
                 .Select(x => int.Parse(x))
                 .Where(x => x <= 2020)
-                .OrderBy(x => x)
-                .ToArray();
+                .OrderBy(x => x);
+
+            var min = datas.First();
+            
+            // Can actually filter out even more.
+            var data = datas.Where(x => x <= 2020 - min).ToArray();
 
             var l = 0;
             var r = data.Length - 1;
@@ -42,38 +46,58 @@ namespace Day1
             l = 0;
             r = data.Length - 1;
             var m = 1;
+            var dir = -1;
 
             do
             {
                 var total = data[l] + data[m] + data[r];
+                Console.WriteLine($"{l,4} {m,4} {r,4} => {total,12}");
 
                 if (total == 2020)
                 {
                     Console.WriteLine();
+                    Console.WriteLine(total);
                     Console.WriteLine(data[l] * data[r] * data[m]);
                     break;
                 }
-                else if (total > 2020)
+
+                if (dir < 0)
                 {
-                    r--;
+                    if (total < 2020)
+                    {
+                        m++;
+                    }
+                    else
+                    {
+                        r--;
+                    }
+
+                    if (m == r)
+                    {
+                        l++;
+                        dir = 1;
+                    }
                 }
                 else
                 {
-                    l++;
+                    if (total < 2020)
+                    {
+                        r++;
+                    }
+                    else
+                    {
+                        m--;
+                    }
+
+                    if (m == l)
+                    {
+                        l++;
+                        m += 2;
+                        dir = -1;
+                    }
                 }
 
-                if (l == m)
-                {
-                    l = 0;
-                    m++;
-                    r = data.Length - 1;
-                }
-
-                Console.Write($"\r {l,4} {m,4} {r,4}");
-            } while (true);
-            
-
-
+            } while (r != l && l != m);
         }
     }
 }
