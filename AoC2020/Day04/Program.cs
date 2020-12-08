@@ -87,7 +87,7 @@ namespace Day04
 
                         return isValid;
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         return false;
                     }
